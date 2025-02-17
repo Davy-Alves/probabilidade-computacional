@@ -17,11 +17,12 @@ u1 =  mean(amostras, 'c') ;
 
 u2 = (max(amostras, 'c') + min(amostras, 'c'))/2
 /* Histograma de u1*/
-
+figure;
 histplot(100, u1);
 title('histograma de u1');
 
 /* Histograma de u2*/
+figure;
 histplot(100, u2);
 title('histograma de u2');
 
@@ -32,10 +33,11 @@ media_u1 = (mean(u1));
 media_u2 = (mean(u2));
 
 /* Histograma da média amostral de u1*/
-
+figure;
 histplot(100, media_u1);
 title('histograma de media_u1');
 
 /* Histograma da média amostral de u2*/
+figure;
 histplot(100, media_u2);
 title('histograma de media_u2');
