@@ -11,6 +11,11 @@ resultados = zeros(n,1);
 sucesso = 0;
 falha = 0;
 
+//Motivos de Falha
+falha_total = 0;
+falha_C1 = 0;
+caminho_C1=0;
+
 //Contadores de Rota
 caminho_C1_C2 = 0;
 caminho_C1_C3 = 0;
@@ -30,6 +35,21 @@ for i = 1:n
     C2 = rand() < p;
     C3 = rand() < p;
     C4 = rand() < p;
+     
+    //Se somente C1 funcionar e os demais falharem
+    if (C1 && ~(C2 || C3 || C4)) then
+        caminho_C1 = caminho_C1 +1;
+    end
+    
+    //Se Todos os componentes falharem
+    if (~C1 && ~(C2 || C3 || C4)) then
+        falha_total = falha_total +1;
+    end
+    
+    //Se somente C1 falhar, e um ou mais dos demais estiverem funcionando
+    if (~C1  && (C2 || C3 || C4)) then
+        falha_C1 = falha_C1 + 1;
+    end
     
     // O sistema funcionará se C1 funcionar e pelo menos um de C2, C3 ou C4 funcionar
     if (C1 && (C2 || C3 || C4)) then
@@ -68,7 +88,12 @@ disp("Resultados finais da simulação:");
 disp("Total de simulações: " + string(n));
 disp("Sucessos (sistema funcionando): " + string(sucesso) + " (" + string((sucesso/n)*100) + "%)");
 disp("Falhas (sistema não funcionando): " + string(falha) + " (" + string((falha/n)*100) + "%)");
-
+disp("==============================");
+disp("Motivos de falha:")
+disp("Somente C1 funcionou: " + string(caminho_C1));
+disp("Somente C1 falhou: " + string(falha_C1));
+disp("Falha Total: " + string(falha_total));
+disp("Total de Falhas: "+ string(falha_total + falha_C1 + caminho_C1))
 disp("==============================");
 disp("==============================");
 disp("==============================");
@@ -91,29 +116,38 @@ disp(msprintf("| C1 → C4    | %8d    | %.4f ou %.2f%%  |", caminho_C1_C4, freq
 disp(msprintf("| X  → X     | %8d    | %.4f ou %.2f%%  |", falha, freq_Falha,freq_Falha*100));
 disp("------------------------------------------------");
 
+
+
+disp("==============================");
+disp("==============================");
+disp("==============================");
+
+
 //Frequencia relativa de cada rota
+freq_Falha_Total = falha_total / n;
+freq_Falha_C1 = falha_C1 / n;
+freq_C1t = caminho_C1 / n ;
 freq_C1_C2t = caminho_C1_C2t / n;
 freq_C1_C3t = caminho_C1_C3t / n;
 freq_C1_C4t = caminho_C1_C4t / n;
 freq_Falha = falha/n;
 
-
-disp("==============================");
-disp("==============================");
-disp("==============================");
 // Criando a tabela de frequência relativa
 disp("Tabela de Frequência Relativa:");
 disp("Rotas Individuais");
 disp("------------------------------------------------");
 disp("| Caminho    | Ocorrências | Frequência Relativa|");
 disp("------------------------------------------------");
+disp(msprintf("| X → X      | %8d    | %.4f ou %.2f%%   |", falha_total,freq_Falha_Total,freq_Falha_Total*100)); 
+disp(msprintf("| X → Cn     | %8d    | %.4f ou %.2f%%   |", falha_C1,freq_Falha_C1,freq_Falha_C1*100)); 
+disp(msprintf("| C1 → X     | %8d    | %.4f ou %.2f%%   |", caminho_C1,freq_C1t, freq_C1t*100)); 
 disp(msprintf("| C1 → C2    | %8d    | %.4f ou %.2f%%  |", caminho_C1_C2t,freq_C1_C2t, freq_C1_C2t*100));
 disp(msprintf("| C1 → C3    | %8d    | %.4f ou %.2f%%   |", caminho_C1_C3t, freq_C1_C3t,freq_C1_C3t*100));
 disp(msprintf("| C1 → C4    | %8d    | %.4f ou %.2f%%   |", caminho_C1_C4t, freq_C1_C4t,freq_C1_C4t*100));
-disp(msprintf("| X  → X     | %8d    | %.4f ou %.2f%%  |", falha, freq_Falha,freq_Falha*100));
+// disp(msprintf("| X  → X     | %8d    | %.4f ou %.2f%%  |", falha, freq_Falha,freq_Falha*100));
 disp("------------------------------------------------");
 // Mostrando também a soma das ocorrências e frequência total (deve ser ≈ 1)
-disp(msprintf("| TOTAL      | %8d     | %.4f           |", sucesso+falha, (freq_C1_C2t + freq_C1_C3t + freq_C1_C4t +freq_Falha)));
+disp(msprintf("| TOTAL      | %8d     | %.4f           |", sucesso+falha, (freq_Falha_Total + freq_Falha_C1 + freq_C1t + freq_C1_C2t + freq_C1_C3t + freq_C1_C4t)));
 disp("------------------------------------------------");
 
 
